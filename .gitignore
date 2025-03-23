@@ -1,0 +1,9 @@
+*.pdf
+*.csv
+*~
+*.fits
+*.txt
+*.png
+*.npy
+*.tex
+*.pyc
