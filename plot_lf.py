@@ -5,7 +5,7 @@ from plots import *
 from fit_lf import model
 from willott import *
 
-setupfig()
+setupfig(size=(13,10),fontsize=24)
 overplot_willott=False
 
 colors=[ccol(2),ccol(3),ccol(11),ccol(4),ccol(5),ccol(6),ccol(8),ccol(7),ccol(9),ccol(10)]
@@ -51,5 +51,5 @@ plt.ylabel('$\\rho$ (Mpc$^{-3}$ dex$^{-1}$)')
 if overplot_willott:
     savefig('lfwillott.pdf')
 else:
-    savefig('lfdata.pdf')
+    savefig('lfdata-aspect.pdf')
 #plt.show()

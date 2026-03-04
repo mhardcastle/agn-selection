@@ -1,6 +1,12 @@
 from plots import *
 from scipy import stats
 from density_contours2 import DC
+import sys
+
+if len(sys.argv)>1:
+    only_one=True
+else:
+    only_one=False
 
 t=Table.read('agn.fits')
 
@@ -14,7 +20,11 @@ for i in range(3):
 print(len(t))
 #t=t[t['abs_w3']<-24.5]
 
-setupfig(size=(20,10))
+if only_one:
+    setupfig(size=(10,10))
+else:
+    setupfig(size=(20,10))
+    
 corrs=[2.699,3.339,5.174,6.620]
 table=t
 for i in range(4):
@@ -25,7 +35,7 @@ for i in range(4):
 t['w2w3']=t['mag_w2v']-t['mag_w3v']
 t['w1w2']=t['mag_w1v']-t['mag_w2v']
 extent=(0,5.0,-0.4,1.6)
-plt.subplot(121)    
+if not only_one: plt.subplot(121)    
 plt.hexbin(t['w2w3'],t['w1w2'],mincnt=5,gridsize=100,alpha=1.0,bins='log',cmap='Greys',extent=extent,label=None,vmax=1000)
 
 herg=t[t['CLASS_HERG']>0.80]
@@ -54,22 +64,25 @@ for i,lh in enumerate(leg.legendHandles):
     if i>0:
         lh.set_alpha(1)
 
-plt.subplot(122)
-hq=t[np.logical_or(t['DR16Q'],t['CLASS_HERG']>0.80)]
-#extent=(0,5)
-extent=(-0.4,1.6)
-k='w1w2'
-_,bins,_=plt.hist(t[k],bins=60,range=extent,alpha=0.2,color='gray',label='All sources')
-plt.hist(lerg[k],bins=bins,label='D24 LERG',alpha=0.5,color=ccol(12))
-plt.hist(herg[k],bins=bins,label='D24 HERG',alpha=0.5,color=ccol(5))
-plt.hist(q[k],bins=bins,label='DR16Q RL',alpha=0.5,color=ccol(3))
-plt.hist(hq[k],bins=bins,label='RE',alpha=0.5,color='black',histtype='step')
-plt.yscale('log')
-plt.xlim(extent[0],extent[1])
-plt.legend(loc=0)
-plt.xlabel('$W2-W3$')
-plt.ylabel('Number of sources')
-        
-savefig('wisecc_class_density_elc.pdf')
+if only_one:
+    savefig('wisecc_class_density_elc_for_siddhant.pdf')
+else:
+    plt.subplot(122)
+    hq=t[np.logical_or(t['DR16Q'],t['CLASS_HERG']>0.80)]
+    #extent=(0,5)
+    extent=(-0.4,1.6)
+    k='w1w2'
+    _,bins,_=plt.hist(t[k],bins=60,range=extent,alpha=0.2,color='gray',label='All sources')
+    plt.hist(lerg[k],bins=bins,label='D24 LERG',alpha=0.5,color=ccol(12))
+    plt.hist(herg[k],bins=bins,label='D24 HERG',alpha=0.5,color=ccol(5))
+    plt.hist(q[k],bins=bins,label='DR16Q RL',alpha=0.5,color=ccol(3))
+    plt.hist(hq[k],bins=bins,label='RE',alpha=0.5,color='black',histtype='step')
+    plt.yscale('log')
+    plt.xlim(extent[0],extent[1])
+    plt.legend(loc=0)
+    plt.xlabel('$W2-W3$')
+    plt.ylabel('Number of sources')
 
-plt.show()
+    savefig('wisecc_class_density_elc.pdf')
+
+    plt.show()
